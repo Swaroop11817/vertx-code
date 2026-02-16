@@ -16,9 +16,11 @@ repositories {
 
 val vertxVersion = "5.0.7"
 val junitJupiterVersion = "5.9.1"
+val jacksonVersion = "2.18.2"
 
 val mainVerticleName = "com.swaroop.udemy.vertx_starter.MainVerticle"
 val launcherClassName = "io.vertx.launcher.application.VertxApplication"
+//val launcherClassName = "io.vertx.core.Launcher"
 
 application {
   mainClass.set(launcherClassName)
@@ -34,21 +36,21 @@ dependencies {
   implementation("org.apache.logging.log4j:log4j-api")
   implementation("org.apache.logging.log4j:log4j-core")
   implementation("org.apache.logging.log4j:log4j-slf4j2-impl:2.22.1")
-
+  implementation("com.fasterxml.jackson.core:jackson-databind:$jacksonVersion")
   testImplementation("io.vertx:vertx-junit5")
   testImplementation("org.junit.jupiter:junit-jupiter:$junitJupiterVersion")
   testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
 java {
-  sourceCompatibility = JavaVersion.VERSION_25
-  targetCompatibility = JavaVersion.VERSION_25
+  sourceCompatibility = JavaVersion.VERSION_21
+  targetCompatibility = JavaVersion.VERSION_21
 }
 
 tasks.withType<ShadowJar> {
   archiveClassifier.set("fat")
   manifest {
-    attributes(mapOf("Main-Verticle" to mainVerticleName))
+    attributes(mapOf("Main-Class" to launcherClassName,"Main-Verticle" to mainVerticleName))
   }
   mergeServiceFiles()
 }
@@ -63,3 +65,8 @@ tasks.withType<Test> {
 tasks.withType<JavaExec> {
   args = listOf(mainVerticleName)
 }
+
+//tasks.withType<JavaExec> {
+//  // Use a system property instead of arguments for consistency with the IDE
+//  systemProperty("vertx.main-verticle", mainVerticleName)
+//}

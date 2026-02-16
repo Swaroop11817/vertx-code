@@ -14,6 +14,7 @@ public class WorkerVerticle extends VerticleBase {
   public Future<?> start() throws InterruptedException {
     LOG.debug("Deployed as worker verticle");
     Thread.sleep(5000);
+    LOG.debug("Blocking operation done");
     return Future.succeededFuture();
   }
 }
