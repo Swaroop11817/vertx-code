@@ -6,6 +6,8 @@ import io.vertx.core.Vertx;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Random;
+
 public class MainVerticle extends VerticleBase {
 
   private static final Logger LOG = LoggerFactory.getLogger(MainVerticle.class);
@@ -17,6 +19,9 @@ public class MainVerticle extends VerticleBase {
 
   @Override
   public Future<?> start() {
+
+    vertx.setPeriodic(100, id -> LOG.info(String.valueOf(new Random().nextDouble())));
+
     return vertx.createHttpServer().requestHandler(req -> {
       req.response()
         .putHeader("content-type", "text/plain")
@@ -24,5 +29,7 @@ public class MainVerticle extends VerticleBase {
     }).listen(8888).onSuccess(http -> {
       LOG.debug("HTTP server started on port 8888");
     });
+
+
   }
 }

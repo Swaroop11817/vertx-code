@@ -5,6 +5,7 @@ plugins {
   java
   application
   id("com.gradleup.shadow") version "9.2.2"
+  id("com.google.cloud.tools.jib") version "3.5.3"
 }
 
 group = "com.swaroop.udemy"
@@ -47,6 +48,21 @@ java {
   targetCompatibility = JavaVersion.VERSION_21
 }
 
+jib{
+  from{
+    image = "amazoncorretto:21"
+}
+  to{
+    image = "ias1234/my-project"
+  }
+  container{
+    mainClass = launcherClassName
+    args = listOf(mainVerticleName)
+    ports = listOf("8888")
+  }
+}
+
+
 tasks.withType<ShadowJar> {
   archiveClassifier.set("fat")
   manifest {
@@ -65,6 +81,12 @@ tasks.withType<Test> {
 tasks.withType<JavaExec> {
   args = listOf(mainVerticleName)
 }
+
+//vertx {
+//  vertxVersion = "5.0.7"
+//  mainVerticle = "com.swaroop.udemy.vertx_starter.MainVerticle"
+//  jvmArgs = ['-Dvertx.logger-delegate-factory-class-name=io.vertx.core.logging.SLF4JLogDelegateFactory']
+//}
 
 //tasks.withType<JavaExec> {
 //  // Use a system property instead of arguments for consistency with the IDE
